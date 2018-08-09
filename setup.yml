@@ -13,7 +13,9 @@
     #   tags:
     #     - init
 
-    # TODO: bash
+    - role: zsh
+      tags:
+        - zsh
 
     # Initialize tmux
     - role: tmux

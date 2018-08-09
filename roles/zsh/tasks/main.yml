@@ -1,0 +1,38 @@
+
+
+# Install zsh
+
+- name: Install zsh using apt
+  apt:
+    name: zsh
+    state: present
+  become_method: sudo
+
+
+# Link the configuration file
+
+- name: Checking if the configuration file zshrc already exists
+  stat:
+    path: "{{ user_home }}/.zshrc"
+  register: cfg_zshrc
+
+- name: Backup the configuration file zshrc
+  command: mv "{{ user_home }}/.zshrc" "{{ user_home }}/.zshrc.backup"
+  args:
+    creates: "{{ user_home }}/.zshrc.backup"
+  when: cfg_zshrc.stat.exists
+
+- name: Linking the configuration file zshrc
+  file:
+    src: "{{ role_path }}/files/zshrc"
+    dest: "{{ user_home }}/.zshrc"
+    state: link
+
+
+# Install oh-my-zsh
+
+- name: Cloning the oh-my-zsh repository
+  git:
+    repo: "https://github.com/robbyrussell/oh-my-zsh"
+    dest: "{{ user_home }}/.oh-my-zsh"
+    depth: 1

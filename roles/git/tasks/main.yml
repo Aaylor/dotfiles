@@ -3,5 +3,6 @@
   apt:
     name: git
     state: latest
-  become: true
   become_method: sudo
+
+# TODO: install git configuration
