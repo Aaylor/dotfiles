@@ -1,0 +1,13 @@
+
+- name: Install tmux using apt-get
+  apt:
+    name: tmux
+    state: latest
+  become: true
+  become_method: sudo
+
+- name: Link tmux configuration file
+  file:
+    src: "{{ role_path }}/files/tmux.conf"
+    dest: "{{ user_home }}/.tmux.conf"
+    state: link

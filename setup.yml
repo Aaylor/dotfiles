@@ -7,3 +7,15 @@
     - role: git
       tags:
         - git
+
+    # Initialize the apt repository
+    # - role: init
+    #   tags:
+    #     - init
+
+    # TODO: bash
+
+    # Initialize tmux
+    - role: tmux
+      tags:
+        - tmux

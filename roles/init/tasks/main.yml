@@ -1,0 +1,12 @@
+
+- name: Update apt
+  apt:
+    update_cache: yes
+  become: true
+  become_method: sudo
+
+- name: Upgrade apt packages
+  apt:
+    upgrade: "yes"
+  become: true
+  become_method: sudo
