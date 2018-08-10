@@ -3,7 +3,7 @@
 
 # Setup important directory
 
-BIN=$(realpath .)
+BIN=$(realpath "$(dirname "$0")")
 HOSTS=$(realpath "$BIN"/../hosts)
 SETUP=$(realpath "$BIN"/../setup.yml)
 
@@ -20,7 +20,7 @@ ansible_playbook() {
 
 # Update command
 
-do_update() {
+_update() {
     if [ "$#" -eq 0 ]; then
         echo "Updating the development environment..."
         ansible_playbook --skip-tags "bootstrap"
@@ -34,7 +34,7 @@ do_update() {
 
 # Init command
 
-do_init() {
+_init() {
     echo "Initilize the development environment..."
     ansible_playbook --ask-become-pass
     echo
@@ -45,16 +45,15 @@ do_init() {
 # Start command
 
 if [ "$#" -eq 0 ]; then
-    echo "pouet"                # TODO
     exit 1
 fi
 
 case "$1" in
     update)
         shift;
-        do_update "$@";;
+        _update "$@";;
     init)
         shift;
         [ "$#" -ne 0 ] && echo "Parameters are ignored when using 'init' command.";
-        do_init;;
+        _init;;
 esac
