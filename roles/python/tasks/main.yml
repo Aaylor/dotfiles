@@ -7,14 +7,10 @@
     repo: https://github.com/pyenv/pyenv.git
     dest: "{{ user_home }}/.pyenv"
 
-- name: Pyenv root
-  command: pyenv root
-  register: pyenv_root
-
 - name: Clone pyenv-virtualenv
   git:
     repo: https://github.com/pyenv/pyenv-virtualenv.git
-    dest: "{{ pyenv_root }}/plugins/pyenv-virtualenv"
+    dest: "{{ user_home }}/.pyenv/plugins/pyenv-virtualenv"
 
 
 # Install Python version
