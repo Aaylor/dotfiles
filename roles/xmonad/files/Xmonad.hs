@@ -166,7 +166,7 @@ rootMask =  substructureRedirectMask .|. substructureNotifyMask
 -- | The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 terminal :: String
-terminal = "xterm"
+terminal = "konsole"
 
 -- | Whether focus follows the mouse pointer.
 focusFollowsMouse :: Bool
