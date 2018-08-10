@@ -11,3 +11,8 @@ dotfiles_repository: "{{ user_home }}/git/perso/dotfiles"
 user_full_name: Loïc Runarvot
 user_git_username: Aaylor
 user_git_email: loic.runarvot@gmail.com
+
+# Python version
+python_versions:
+  - 3.6.5
+  - 2.7.12

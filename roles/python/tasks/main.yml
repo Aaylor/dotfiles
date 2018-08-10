@@ -1,0 +1,40 @@
+
+
+# Install pyenv
+
+- name: Clone pyenv
+  git:
+    repo: https://github.com/pyenv/pyenv.git
+    dest: "{{ user_home }}/.pyenv"
+
+- name: Pyenv root
+  command: pyenv root
+  register: pyenv_root
+
+- name: Clone pyenv-virtualenv
+  git:
+    repo: https://github.com/pyenv/pyenv-virtualenv.git
+    dest: "{{ pyenv_root }}/plugins/pyenv-virtualenv"
+
+
+# Install Python version
+
+- name: Install Python version using pyenv
+  command: pyenv install {{ item }}
+  args:
+    creates: "{{ '~/.pyenv/versions/' + item | expanduser }}"
+  with_items: "{{ python_versions }}"
+
+- name: Set global Python versions with pyenv
+  copy:
+    content: "system\n{% for version in python_versions %}{{ version }}\n{% endfor %}"
+    dest: "{{ '~/.pyenv/version' }}"
+
+
+# Upgrade pip
+
+- name: Upgrade pip to latest version
+  pip:
+    name: pip
+    state: latest
+

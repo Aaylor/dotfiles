@@ -26,7 +26,7 @@ _update() {
         ansible_playbook --skip-tags "bootstrap"
     else
         echo "Update the development envionment using tags: $@"
-        ansible_playbook --skip-tags "bootstrap" --tags "$@"
+        ansible_playbook --skip-tags "bootstrap" --tags "$@" --ask-become-pass
     fi
     echo "The development environment has been updated."
 }

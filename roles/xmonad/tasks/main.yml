@@ -1,0 +1,22 @@
+
+- name: Install xmonad with core and contrib functionality using apt-get
+  apt:
+    name: "{{ xmonad_packages }}"
+  become: true
+  become_method: sudo
+  vars:
+    xmonad_packages:
+      - xmonad
+      - libghc-xmonad-dev
+      - libghc-xmonad-contrib-dev
+
+- name: Create xmonad configuration directory
+  file:
+    path: "{{ user_home }}/.xmonad"
+    state: directory
+
+- name: Link the Xmonad configuration file
+  file:
+    src: "{{ role_path }}/files/Xmonad.hs"
+    dest: "{{ user_home }}/.xmonad/Xmonad.hs"
+    state: link

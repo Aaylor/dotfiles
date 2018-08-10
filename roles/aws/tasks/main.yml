@@ -1,0 +1,22 @@
+
+- name: Install AWS Cli using pip
+  pip:
+    name: awscli
+    state: latest
+    extra_args: --user
+
+- name: Install boto, boto3 and botocore using pip
+  pip:
+    name:
+      - boto
+      - boto3
+      - botocore
+    state: latest
+    extra_args: --user
+
+- name: Create the configuration folder .aws
+  file:
+    path: "{{ user_home }}/.aws"
+    state: directory
+
+# TODO: Add rule to install (hidden) configuration

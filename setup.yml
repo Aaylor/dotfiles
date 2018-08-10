@@ -17,6 +17,19 @@
       tags:
         - zsh
 
+    # Initialize xmonad
+    - role: xmonad
+      tags:
+        - xmonad
+
+    - role: python
+      tags:
+        - python
+
+    - role: aws
+      tags:
+        - aws
+
     # Initialize tmux
     - role: tmux
       tags:
