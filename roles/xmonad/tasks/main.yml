@@ -1,11 +1,12 @@
 
-- name: Install xmonad with core and contrib functionality using apt-get
+- name: Install xmonad and xmobar with core and contrib functionality using apt-get
   apt:
     name: "{{ xmonad_packages }}"
   become: true
   become_method: sudo
   vars:
     xmonad_packages:
+      - xmobar
       - xmonad
       - libghc-xmonad-dev
       - libghc-xmonad-contrib-dev
@@ -15,8 +16,14 @@
     path: "{{ user_home }}/.xmonad"
     state: directory
 
-- name: Link the Xmonad configuration file
+- name: Link the XMonad configuration file
   file:
     src: "{{ role_path }}/files/xmonad.hs"
     dest: "{{ user_home }}/.xmonad/xmonad.hs"
+    state: link
+
+- name: Link the XMobar configuration files
+  file:
+    src: "{{ role_path }}/files/xmobarrc"
+    dest: "{{ user_home }}/.xmobarrc"
     state: link
