@@ -17,6 +17,6 @@
 
 - name: Link the Xmonad configuration file
   file:
-    src: "{{ role_path }}/files/Xmonad.hs"
-    dest: "{{ user_home }}/.xmonad/Xmonad.hs"
+    src: "{{ role_path }}/files/xmonad.hs"
+    dest: "{{ user_home }}/.xmonad/xmonad.hs"
     state: link
