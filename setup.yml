@@ -13,11 +13,14 @@
     #   tags:
     #     - init
 
+    - role: packages
+      tags:
+        - packages
+
     - role: zsh
       tags:
         - zsh
 
-    # Initialize xmonad
     - role: xmonad
       tags:
         - xmonad

@@ -97,7 +97,7 @@ keys conf @ (XConfig { XMonad.modMask = modMask }) =
  [
    -- Launching and killing programs
    ((modMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) -- Terminal
- , ((modMask, xK_p), spawn "demnu_run")                               -- Dmenu
+ , ((modMask, xK_p), spawn "dmenu_run")                               -- Dmenu
  , ((modMask .|. shiftMask, xK_p), spawn "gmrun")                     -- Gmrun
  , ((modMask .|. shiftMask, xK_c), kill)                              -- Close window
 
@@ -132,7 +132,7 @@ keys conf @ (XConfig { XMonad.modMask = modMask }) =
   ++
   -- mod-[1 .. 9]: switch to workspace N
   -- mod-shift-[1 .. 9]: switch application to workspace N
-  [ ((m .|. modMask, k), windows $ f i)
+  [ ((modMask .|. m, k), windows $ f i)
   | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
   , (f, m) <- [ (W.greedyView, 0), (W.shift, shiftMask) ] ]
 

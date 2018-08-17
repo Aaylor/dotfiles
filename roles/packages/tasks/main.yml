@@ -1,0 +1,10 @@
+
+- name: Install generic apt packages
+  apt:
+    name: "{{ apt_packages }}"
+  become: true
+  become_method: sudo
+  vars:
+    apt_packages:
+      - gmrun
+      - suckless-tools          # For: dmenu
