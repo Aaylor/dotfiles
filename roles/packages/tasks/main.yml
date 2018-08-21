@@ -7,4 +7,5 @@
   vars:
     apt_packages:
       - gmrun
+      - stalonetray             # For: nm-applet
       - suckless-tools          # For: dmenu

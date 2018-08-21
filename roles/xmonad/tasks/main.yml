@@ -22,8 +22,14 @@
     dest: "{{ user_home }}/.xmonad/xmonad.hs"
     state: link
 
-- name: Link the XMobar configuration files
+- name: Link the XMobar configuration file
   file:
     src: "{{ role_path }}/files/xmobarrc"
     dest: "{{ user_home }}/.xmobarrc"
+    state: link
+
+- name: Link the Xinitrc configuration file
+  file:
+    src: "{{ role_path }}/files/xinitrc"
+    dest: "{{ user_home }}/.xinitrc"
     state: link

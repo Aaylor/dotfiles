@@ -1,0 +1,8 @@
+
+# Set up an incon tray
+stalonetray &
+
+# Start nm-applet if exist
+if type nm-applet > /dev/null; then
+    nm-applet --sm-disable &
+fi
