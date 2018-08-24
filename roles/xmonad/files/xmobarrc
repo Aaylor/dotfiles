@@ -6,7 +6,7 @@ Config
   , bgColor = "#002b36"
   , fgColor = "white"
   , alpha = 255                 -- default: 255
-  , position = TopSize C 100 26
+  , position = TopSize R 98 26
   , textOffset = -1             -- default: -1
   , iconOffset = -1             -- default: -1
   , lowerOnStart = True

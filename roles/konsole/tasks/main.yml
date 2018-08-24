@@ -1,0 +1,29 @@
+
+- name: Install konsole using apt-get
+  apt:
+    name: "konsole"
+  become: true
+  become_method: sudo
+  
+- name: Create the .config directory if it does not exist
+  file:
+    path: "{{ user_home }}/.config"
+    state: directory
+
+- name: Create the link to the configuration file
+  file:
+    src: "{{ role_path }}/files/konsolerc" 
+    dest: "{{ user_home }}/.config/konsolerc"
+    state: link
+
+- name: Create the konsole profile directory if it does not exist
+  file:
+    path: "{{ user_home }}/.local/share/konsole"
+    recurse: yes
+    state: directory
+
+- name: Create the link to profile
+  file:
+    src: "{{ role_path }}/files/Aaylor.profile"
+    dest: "{{ user_home }}/.local/share/konsole/Aaylor.profile"
+    state: link

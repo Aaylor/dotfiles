@@ -45,3 +45,9 @@
     src: "{{ role_path }}/files/binaries"
     dest: "{{ user_home }}/.xmonad/binaries"
     state: link
+
+- name: Link the stalonetray configuration file
+  file:
+    src: "{{ role_path }}/files/stalonetrayrc"
+    dest: "{{ user_home }}/.stalonetrayrc"
+    state: link

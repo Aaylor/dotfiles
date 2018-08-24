@@ -1,11 +1,23 @@
-
-# Set up an incon tray
-stalonetray &
+#!/usr/bin/env bash
 
 # Start xscreensaver
-xscreensaver &
+sleep 10 && xscreensaver -no-splash &
 
-# Start nm-applet if exist
-if type nm-applet > /dev/null; then
-    nm-applet --sm-disable &
-fi
+
+
+###########
+# ICON TRAY
+
+setup_tray() {
+
+    # Setup the tray
+    stalonetray &
+
+    # Wait the tray to be ready
+    sleep 3
+
+    # Start nm-applet if it exists
+    ( type nm-applet > /dev/null && nm-applet --sm-disable ) &
+}
+
+sleep 5 && setup_tray
