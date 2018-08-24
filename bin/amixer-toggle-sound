@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# There is problem to use the command 'toggle' on Master.
+# It mutes correctly the sound, but it does not unmute every channel.
+
+input=$(amixer sget Master)
+
+if amixer sget Master | grep -q "\[off\]"; then
+    amixer sset Master unmute
+    amixer sset Headphone unmute
+else
+    amixer sset Master mute
+    amixer sset Headphone mute
+fi

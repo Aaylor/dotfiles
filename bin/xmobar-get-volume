@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+input=$(amixer sget Master)
+
+if grep -q "\[off\]" <<< "$input"; then
+    echo '<icon=speaker-off.xpm/>    '
+else
+    percentage=$(grep -o '[0-9]\+%' <<< "$input")
+    echo "<icon=speaker-on.xpm/> $percentage"
+fi
