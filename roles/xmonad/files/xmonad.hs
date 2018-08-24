@@ -2,20 +2,21 @@
 {-# LANGUAGE TypeFamilies #-}
 
 import XMonad
--- import XMonad.Hooks.DynamicLog (PP(ppLayout, ppSort, ppTitle, ppTitleSanitize, ppVisible),
---                                 statusBar, wrap)
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks(ToggleStruts(..), avoidStruts, manageDocks)
+import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
-import qualified XMonad.StackSet as W
-import XMonad.Util.WorkspaceCompare (getSortByIndex)
-
-import qualified Data.Map as M
-import System.Exit
-
-import System.IO
-import XMonad.Util.Run
 import XMonad.Layout.IndependentScreens
+import XMonad.Layout.Spacing
+import XMonad.Util.Run
+import XMonad.Util.WorkspaceCompare
+
+import System.Exit
+import System.IO
+
+import qualified XMonad.StackSet as W
+import qualified Data.Map as M
+
+
 
 ------------------------------------------------------------------------
 -- Layout:
@@ -29,10 +30,10 @@ layout =
   Full
   where
     -- Default tiling algorithm: split screen in two panes
-    tiled = Tall masterPanes delta ratio
+    tiled = smartSpacing 5 $ Tall masterPanes delta ratio
     -- Default number of windows in the master pane
     masterPanes = 1
-    -- Default proportion of screen occupied by mater pane
+    -- Default proportion of screen occupied by master pane
     ratio = 1 / 2
     -- Percent of screen to increment by when resizing panes
     delta = 3 / 100
@@ -67,12 +68,12 @@ myModMask = mod4Mask
 
 -- | Width of the border
 myBorderWidth :: Dimension
-myBorderWidth = 1
+myBorderWidth = 3
 
 -- | Border color for (un)focused windows.
 myNormalBorderColor, myFocusedBorderColor :: String
-myNormalBorderColor = "gray"
-myFocusedBorderColor = "red"
+myNormalBorderColor = "white"
+myFocusedBorderColor = "yellow"
 
 -- | Terminal
 myTerminal :: String
@@ -171,8 +172,6 @@ myPP =
   , ppVisible = wrap "(" ")"
   , ppWsSep = " | " }
 
-toggleStrutsKey XConfig { XMonad.modMask = modMask } = (modMask, xK_b)
-
 myConfig =
   XMonad.def
   { XMonad.borderWidth = myBorderWidth
@@ -196,6 +195,3 @@ main = do
               (\handle -> dynamicLogWithPP $ myPP { ppOutput = System.IO.hPutStrLn handle })
               xmprocs
     }
-
--- main = xmonad =<<
---        statusBar "xmobar" myPP toggleStrutsKey myConfig
