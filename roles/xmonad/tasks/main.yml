@@ -28,10 +28,10 @@
     dest: "{{ user_home }}/.xmobarrc"
     state: link
 
-- name: Link the Xinitrc configuration file
+- name: Link the Xmonad-session configuration file
   file:
-    src: "{{ role_path }}/files/xinitrc"
-    dest: "{{ user_home }}/.xinitrc"
+    src: "{{ role_path }}/files/xmonad-session-rc"
+    dest: "{{ user_home }}/.xmonad/xmonad-session-rc"
     state: link
 
 - name: Link the xscreensaver
