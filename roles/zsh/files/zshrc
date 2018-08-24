@@ -87,4 +87,4 @@ export DOTFILES="$HOME/git/perso/dotfiles"
 for zsh_script in $(find "$DOTFILES" -name '*.zsh'); do
     source "$zsh_script"
 done
-
+export PATH="$DOTFILES/bin:$PATH"

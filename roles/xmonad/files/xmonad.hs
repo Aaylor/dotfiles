@@ -44,15 +44,15 @@ layout =
 -- The number of workspaces is determined by the lenght of this list
 
 workspaces :: [WorkspaceId]
-workspaces = [ "1"
-             , "2"
-             , "3"
-             , "4"
-             , "5"
-             , "6"
-             , "7"
-             , "8"
-             , "9" ]
+workspaces = [ "W1"
+             , "W2"
+             , "W3"
+             , "W4"
+             , "W5"
+             , "W6"
+             , "W7"
+             , "W8"
+             , "W9" ]
 
 
 ------------------------------------------------------------------------
@@ -125,6 +125,14 @@ keys conf @ (XConfig { XMonad.modMask = modMask }) =
  , ((modMask, xK_comma), sendMessage (IncMasterN 1))
  , ((modMask, xK_period), sendMessage (IncMasterN (- 1)))
 
+   -- Screensaver
+ , ((modMask .|. shiftMask, xK_l), spawn "xscreensaver-command -lock")
+
+   -- Sound
+ , ((modMask .|. controlMask, xK_Up), spawn "amixer sset Master 5%+")
+ , ((modMask .|. controlMask, xK_Down), spawn "amixer sset Master 5%-")
+ , ((modMask .|. controlMask, xK_m), spawn "/home/aaylor/git/perso/dotfiles/bin/amixer-toggle-sound")
+
    -- Quit/Restart
  , ((modMask .|. shiftMask, xK_q), io (exitWith ExitSuccess))
  , ((modMask, xK_q), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
@@ -169,7 +177,8 @@ myConfig =
   , XMonad.keys = Main.keys
     -- Hooks
   , XMonad.layoutHook = Main.layout
-  , XMonad.manageHook = Main.myManageHook }
+  , XMonad.manageHook = Main.myManageHook
+  }
 
 
 main = xmonad =<< statusBar "xmobar" myPP toggleStrutsKey myConfig

@@ -33,3 +33,9 @@
     src: "{{ role_path }}/files/xinitrc"
     dest: "{{ user_home }}/.xinitrc"
     state: link
+
+- name: Link the xscreensaver
+  file:
+    src: "{{ role_path }}/files/xscreensaver"
+    dest: "{{ user_home }}/.xscreensaver"
+    state: link

@@ -2,7 +2,12 @@
 # Set up an incon tray
 stalonetray &
 
+# Start xscreensaver
+xscreensaver &
+
 # Start nm-applet if exist
 if type nm-applet > /dev/null; then
     nm-applet --sm-disable &
 fi
+
+exec xmonad

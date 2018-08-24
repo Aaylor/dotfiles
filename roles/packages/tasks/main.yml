@@ -7,5 +7,6 @@
   vars:
     apt_packages:
       - gmrun
+      - xscreensaver
       - stalonetray             # For: nm-applet
       - suckless-tools          # For: dmenu
