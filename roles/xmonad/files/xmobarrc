@@ -46,7 +46,7 @@ Config
                      , "-L", "3"
                      , "-n", "green" ]
         10
-      , Run Com "/home/aaylor/git/perso/dotfiles/bin/xmobar-get-volume" [] "customvolume" 10
+      , Run Com "/bin/bash" [ "-c", "~/.xmonad/binaries/xmobar-get-volume" ] "customvolume" 10
       , Run StdinReader
       ]
   , sepChar = "%"

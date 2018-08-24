@@ -39,3 +39,9 @@
     src: "{{ role_path }}/files/xscreensaver"
     dest: "{{ user_home }}/.xscreensaver"
     state: link
+
+- name: Link the binary folder
+  file:
+    src: "{{ role_path }}/files/binaries"
+    dest: "{{ user_home }}/.xmonad/binaries"
+    state: link

@@ -131,7 +131,7 @@ keys conf @ (XConfig { XMonad.modMask = modMask }) =
    -- Sound
  , ((modMask .|. controlMask, xK_Up), spawn "amixer sset Master 5%+")
  , ((modMask .|. controlMask, xK_Down), spawn "amixer sset Master 5%-")
- , ((modMask .|. controlMask, xK_m), spawn "/home/aaylor/git/perso/dotfiles/bin/amixer-toggle-sound")
+ , ((modMask .|. controlMask, xK_m), spawn "~/.xmonad/binaries/amixer-toggle-sound")
 
    -- Quit/Restart
  , ((modMask .|. shiftMask, xK_q), io (exitWith ExitSuccess))
