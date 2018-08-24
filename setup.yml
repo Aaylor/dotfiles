@@ -21,6 +21,10 @@
       tags:
         - zsh
 
+    - role: konsole
+      tags:
+        - konsole
+
     - role: xmonad
       tags:
         - xmonad
