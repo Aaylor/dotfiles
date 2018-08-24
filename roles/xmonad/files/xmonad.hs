@@ -2,17 +2,20 @@
 {-# LANGUAGE TypeFamilies #-}
 
 import XMonad
-import XMonad.Hooks.DynamicLog (PP(ppLayout, ppSort, ppTitle, ppTitleSanitize, ppVisible),
-                                statusBar, wrap)
+-- import XMonad.Hooks.DynamicLog (PP(ppLayout, ppSort, ppTitle, ppTitleSanitize, ppVisible),
+--                                 statusBar, wrap)
+import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks(ToggleStruts(..), avoidStruts, manageDocks)
 import XMonad.Hooks.ManageHelpers
 import qualified XMonad.StackSet as W
-import XMonad.Util.WorkspaceCompare (getSortByXineramaRule)
+import XMonad.Util.WorkspaceCompare (getSortByIndex)
 
 import qualified Data.Map as M
 import System.Exit
 
-
+import System.IO
+import XMonad.Util.Run
+import XMonad.Layout.IndependentScreens
 
 ------------------------------------------------------------------------
 -- Layout:
@@ -43,16 +46,16 @@ layout =
 -- | The list of workspaces.
 -- The number of workspaces is determined by the lenght of this list
 
-workspaces :: [WorkspaceId]
-workspaces = [ "W1"
-             , "W2"
-             , "W3"
-             , "W4"
-             , "W5"
-             , "W6"
-             , "W7"
-             , "W8"
-             , "W9" ]
+myWorkspaces :: [WorkspaceId]
+myWorkspaces = [ "W1"
+               , "W2"
+               , "W3"
+               , "W4"
+               , "W5"
+               , "W6"
+               , "W7"
+               , "W8"
+               , "W9" ]
 
 
 ------------------------------------------------------------------------
@@ -63,17 +66,17 @@ myModMask :: KeyMask
 myModMask = mod4Mask
 
 -- | Width of the border
-borderWidth :: Dimension
-borderWidth = 1
+myBorderWidth :: Dimension
+myBorderWidth = 1
 
 -- | Border color for (un)focused windows.
-normalBorderColor, focusedBorderColor :: String
-normalBorderColor = "gray"
-focusedBorderColor = "red"
+myNormalBorderColor, myFocusedBorderColor :: String
+myNormalBorderColor = "gray"
+myFocusedBorderColor = "red"
 
 -- | Terminal
-terminal :: String
-terminal = "konsole"
+myTerminal :: String
+myTerminal = "konsole"
 
 
 
@@ -91,8 +94,8 @@ myManageHook =
 ------------------------------------------------------------------------
 -- Key bindings:
 
-keys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
-keys conf @ (XConfig { XMonad.modMask = modMask }) =
+myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
+myKeys conf @ (XConfig { XMonad.modMask = modMask }) =
  M.fromList $
  [
    -- Launching and killing programs
@@ -136,12 +139,15 @@ keys conf @ (XConfig { XMonad.modMask = modMask }) =
    -- Quit/Restart
  , ((modMask .|. shiftMask, xK_q), io (exitWith ExitSuccess))
  , ((modMask, xK_q), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
+
  ]
   ++
   -- mod-[1 .. 9]: switch to workspace N
   -- mod-shift-[1 .. 9]: switch application to workspace N
   [ ((modMask .|. m, k), windows $ f i)
-  | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+  | (i, k) <- zip (XMonad.workspaces conf) [ xK_ampersand, xK_eacute, xK_quotedbl,
+                                             xK_apostrophe, xK_parenleft, xK_minus,
+                                             xK_egrave, xK_underscore, xK_ccedilla ]
   , (f, m) <- [ (W.greedyView, 0), (W.shift, shiftMask) ] ]
 
   ++
@@ -152,33 +158,44 @@ keys conf @ (XConfig { XMonad.modMask = modMask }) =
   , (f, m) <- [ (W.view, 0), (W.shift, shiftMask) ] ]
 
 
-
 ------------------------------------------------------------------------
 -- Main:
 
 myPP =
-  def
+  XMonad.Hooks.DynamicLog.xmobarPP
   { ppLayout = const ""
-  , ppSort = getSortByXineramaRule
+  , ppHiddenNoWindows = trim
+  , ppSort = getSortByIndex
   , ppTitle = const ""
   , ppTitleSanitize = const ""
-  , ppVisible = wrap "(" ")" }
+  , ppVisible = wrap "(" ")"
+  , ppWsSep = " | " }
 
 toggleStrutsKey XConfig { XMonad.modMask = modMask } = (modMask, xK_b)
 
 myConfig =
   XMonad.def
-  { XMonad.borderWidth = Main.borderWidth
-  , XMonad.workspaces = Main.workspaces
-  , XMonad.normalBorderColor = Main.normalBorderColor
-  , XMonad.focusedBorderColor = Main.focusedBorderColor
-  , XMonad.terminal = Main.terminal
-  , XMonad.modMask = Main.myModMask
-  , XMonad.keys = Main.keys
+  { XMonad.borderWidth = myBorderWidth
+  , XMonad.workspaces = myWorkspaces
+  , XMonad.normalBorderColor = myNormalBorderColor
+  , XMonad.focusedBorderColor = myFocusedBorderColor
+  , XMonad.terminal = myTerminal
+  , XMonad.modMask = myModMask
+  , XMonad.keys = myKeys
     -- Hooks
-  , XMonad.layoutHook = Main.layout
-  , XMonad.manageHook = Main.myManageHook
+  , XMonad.layoutHook = layout
+  , XMonad.manageHook = myManageHook
   }
 
 
-main = xmonad =<< statusBar "xmobar" myPP toggleStrutsKey myConfig
+main = do
+  n <- countScreens
+  xmprocs <- mapM (\i -> spawnPipe ("xmobar -x" ++ show i)) [0 .. n - 1]
+  xmonad myConfig {
+    logHook = mapM_
+              (\handle -> dynamicLogWithPP $ myPP { ppOutput = System.IO.hPutStrLn handle })
+              xmprocs
+    }
+
+-- main = xmonad =<<
+--        statusBar "xmobar" myPP toggleStrutsKey myConfig
