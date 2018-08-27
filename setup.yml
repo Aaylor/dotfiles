@@ -37,6 +37,10 @@
       tags:
         - aws
 
+    - role: docker
+      tags:
+        - docker
+
     # Initialize tmux
     - role: tmux
       tags:

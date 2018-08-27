@@ -1,0 +1,71 @@
+
+#####
+# INSTALL DOCKER
+
+
+## Step 1: Install dependent packages
+
+- name: Install dependent packages
+  apt:
+    name: "{{ apt_packages }}"
+  become: true
+  become_method: sudo
+  vars:
+    apt_packages:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+
+
+## Step 2: Add docker GPG key
+
+# - name: Download the GPG key
+#   command: curl -fsSL https://download.docker.com/linux/ubuntu/gpg
+#   register: gpg_command
+
+- name: Add Docker GPG key to apt
+  apt_key:
+    state: present
+    url: https://download.docker.com/linux/ubuntu/gpg
+  become: true
+  become_method: sudo
+
+
+
+## Step 3: Add docker repository
+
+- name: Get the information about the system
+  command: lsb_release -cs
+  register: system_info
+
+- name: Add docker repository
+  apt_repository:
+    repo: >
+      deb [arch=amd64] https://download.docker.com/linux/ubuntu
+      {{ system_info.stdout }}
+      stable
+    state: present
+    update_cache: yes
+  become: true
+  become_method: sudo
+
+
+## Step 4: Install docker
+
+- name: Install docker using apt
+  apt:
+    name: "docker-ce"
+  become: true
+  become_method: sudo
+
+
+## Step 5: Grant abitility to run containers
+
+- name: Update the user group
+  user:
+    append: yes
+    groups: docker
+    name: aaylor
+  become: true
+  become_method: sudo
