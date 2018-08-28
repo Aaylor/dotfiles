@@ -47,10 +47,11 @@ Config
                      , "-n", "green" ]
         10
       , Run Com "/bin/bash" [ "-c", "~/.xmonad/binaries/xmobar-get-volume" ] "customvolume" 10
+      , Run Com "/bin/bash" [ "-c", "~/git/perso/dotfiles/bin/net status --output=xmobar" ] "customnet" 10
       , Run StdinReader
       ]
   , sepChar = "%"
   , alignSep = "}{"
-  , template = " %StdinReader%  }{  %multicpu% | %coretemp% | %customvolume% | %memory% | %disku% | %dynnetwork% | %battery% | %date% "
+  , template = " %StdinReader%  }{  %customnet% | %multicpu% | %coretemp% | %customvolume% | %memory% | %disku% | %dynnetwork% | %battery% | %date% "
   }
   

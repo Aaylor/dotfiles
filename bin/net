@@ -1,0 +1,193 @@
+#!/usr/bin/env bash
+
+
+#########
+# INTERNAL FUNCTIONS
+
+_error() {
+    echo "Error: $*" >&2
+    exit 1
+}
+
+_check_parameters() {
+    [ "$1" -gt "$2" ] && _error "too many arguments."
+}
+
+_wifi_activated() {
+    nmcli radio wifi | grep -q -w "activé"
+}
+
+_wifi_must_be_activated() {
+    _wifi_activated || _error "wifi must be activated."
+}
+
+
+
+#########
+# SANITY CHECKS
+
+type nmcli > /dev/null || _error "the program 'nmcli' does not exist."
+
+
+
+#########
+# FUNCTIONS
+
+
+net_list() {
+    nmcli device wifi
+}
+
+net_status() {
+    # Set the output mode:
+    case "$1" in
+        "--output=xmobar") local OUTPUT_MODE=xmobar ;;
+        *) local OUTPUT_MODE=stdout ;;
+    esac
+
+    states=$(nmcli --fields TYPE,STATE,CONNECTION device status)
+
+    # Check if an ethernet connection exists
+    if echo "$states" | grep ethernet | grep -w connecté > /dev/null 2>&1; then
+        case "$OUTPUT_MODE" in
+            xmobar) echo "<icon=ethernet.xpm/>" ;;
+            stdout) echo "NET: ethernet is connected" ;;
+        esac
+        return
+    fi
+
+    # Check if the wifi connection is activated
+    if ! _wifi_activated; then
+        case "$OUTPUT_MODE" in
+            xmobar) echo "<icon=no-wifi.xpm/>" ;;
+            stdout) echo "NET: wifi is deactivated." ;;
+        esac
+        return
+    fi
+
+    # Check the state of the wifi connection
+    wifi_connection=$(echo "$states" | grep wifi)
+    if test -n "$wifi_connection"; then
+        IFS=' ' read -r -a wifi_info <<< "$wifi_connection"
+
+        case "${wifi_info[1]}" in
+            connecté)
+                signal=$(nmcli device wifi \
+                             | tail -n +2 \
+                             | grep '*' \
+                             | tr -s ' ' \
+                             | cut -d' ' -f8)
+                case "$OUTPUT_MODE" in
+                    xmobar) echo "<icon=wifi-on.xpm/> ${wifi_info[2]} $signal" ;;
+                    stdout) echo "Connected on '${wifi_info[2]}'. Signal: $signal" ;;
+                esac
+                ;;
+            connexion)
+                case "$OUTPUT_MODE" in
+                    xmobar) echo "<icon=wifi-refresh.xpm/> ${wifi_info[3]}     " ;;
+                    stdout) echo "Connexion in progress on '${wifi_info[3]}" ;;
+                esac
+                ;;
+            deconnecté)
+                case "$OUTPUT_MODE" in
+                    xmobar) echo "<icon=wifi-off.xpm/>" ;;
+                    stdout) echo "NET: wifi is not connected." ;;
+                esac
+                ;;
+            *)
+                case "$OUTPUT_MODE" in
+                    xmobar) echo "<icon=wifi-off.xpm/>" ;;
+                    stdout) echo "NET: wifi is not connected." ;;
+                esac
+                ;;
+        esac
+    fi
+}
+
+net_wifi_activate() {
+    nmcli radio wifi on
+}
+
+net_wifi_deactivate() {
+    nmcli radio wifi off
+}
+
+net_wifi_toggle() {
+    if _wifi_activated; then
+        net_wifi_deactivate
+    else
+        net_wifi_activate
+    fi
+}
+
+net_connect() {
+    _wifi_must_be_activated
+
+    if [ "$#" -eq 1 ]; then
+        local WIFI_NAME="$1"
+    else
+        select name in $(nmcli --fields SSID device wifi | tail -n +2); do
+            local WIFI_NAME="$name"
+            break
+        done
+    fi
+
+    if nmcli --fields NAME connect | tail -n +2 | grep -q -w "$WIFI_NAME"; then
+        nmcli connection up "$WIFI_NAME"
+    else
+        nmcli device wifi connect "$WIFI_NAME"
+    fi
+}
+
+net_disconnect() {
+    _wifi_must_be_activated
+
+    wifi_state=$(nmcli --fields TYPE,STATE,CONNECTION device status \
+                     | tr -s ' ' \
+                     | grep wifi \
+                     | grep "connecté")
+    if [ -n "$wifi_state" ]; then
+        wifi_name=$(echo "$wifi_state" | cut -d' ' -f3)
+        nmcli connection down "$wifi_name"
+    else
+        echo "Error: there is no active wifi."
+        exit 1
+    fi
+}
+
+
+command="$1"
+shift
+
+case "$command" in
+    list)
+        _check_parameters "$#" 0
+        net_list
+        ;;
+    status)
+        _check_parameters "$#" 1
+        net_status "$@"
+        ;;
+    wifi-activate|activate|on)
+        _check_parameters "$#" 0
+        net_wifi_activate
+        ;;
+    wifi-deactivate|deactivate|off)
+        _check_parameters "$#" 0
+        net_wifi_deactivate
+        ;;
+    wifi-toggle|toggle)
+        _check_parameters "$#" 0
+        net_wifi_toggle
+        ;;
+    wifi-connect|connect)
+        _check_parameters "$#" 1
+        net_connect "$@"
+        ;;
+    wifi-disconnet|disconnect)
+        _check_parameters "$#" 0
+        net_disconnect
+        ;;
+    *)
+        _error "unknown command '$command'."
+esac
