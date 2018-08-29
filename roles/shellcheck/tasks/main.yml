@@ -1,0 +1,17 @@
+
+- name: Downloading the latest version of shellcheck
+  get_url:
+    url: https://storage.googleapis.com/shellcheck/shellcheck-latest.linux.x86_64.tar.xz
+    dest: /tmp/shellcheck.tar.xz
+
+- name: Unarchive the shellcheck archive
+  unarchive:
+    src: /tmp/shellcheck.tar.xz
+    dest: /tmp/
+
+- name: Copying the binary to /usr/bin
+  copy:
+    src: /tmp/shellcheck-latest/shellcheck
+    dest: /usr/bin/shellcheck
+  become: true
+  become_method: sudo

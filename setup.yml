@@ -37,6 +37,10 @@
       tags:
         - aws
 
+    - role: shellcheck
+      tags:
+        - shellcheck
+
     - role: docker
       tags:
         - docker

@@ -7,6 +7,8 @@
   vars:
     apt_packages:
       - gmrun
-      - xscreensaver
+      - shellcheck
       - stalonetray             # For: nm-applet
       - suckless-tools          # For: dmenu
+      - xscreensaver
+
