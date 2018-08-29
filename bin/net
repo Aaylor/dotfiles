@@ -155,6 +155,49 @@ net_disconnect() {
     fi
 }
 
+net_emergency() {
+    echo "Emergency: starting the tray..."
+    stalonetray &
+    sleep 3
+    echo "Emergency: starting the Network Manager applet..."
+    ( type nm-applet > /dev/null && nm-applet --sm-disable ) &
+    echo "Emergency: when you are done, use the following command: "
+    echo '  $ pkill -TERM stalonetray'
+}
+
+net_help() {
+    cat <<EOF
+Usage: net [command [parameters]]
+
+Small utility tool to control simple network commands. This tool is build over
+the command 'nmcli'.
+
+Available commands:
+
+  * list                Display the list of available wifi connection.
+
+  * status              Display the status of the current network connection.
+
+  * wifi-activate       Activate the wifi device
+
+  * wifi-deactivate     Deactivate the wifi device
+
+  * wifi-toggle         Deactivate the wifi device if it activated. Activate the
+                        wifi device if it is not activated.
+
+  * wifi-connect [name] Start the connection to the given wifi [name]. If the
+                        name is not given, it displays the list of available
+                        wifi connection, and ask for a choice to the user.
+
+  * wifi-disconnect     Disconnect the current wifi.
+
+EOF
+}
+
+
+
+#########
+# START
 
 command="$1"
 shift
@@ -187,6 +230,14 @@ case "$command" in
     wifi-disconnet|disconnect)
         _check_parameters "$#" 0
         net_disconnect
+        ;;
+    emergency)
+        _check_parameters "$#" 0
+        net_emergency
+        ;;
+    help|--help)
+        _check_parameters "$#" 0
+        net_help
         ;;
     *)
         _error "unknown command '$command'."
