@@ -34,12 +34,6 @@
     dest: "{{ user_home }}/.xmonad/xmonad-session-rc"
     state: link
 
-- name: Link the xscreensaver
-  file:
-    src: "{{ role_path }}/files/xscreensaver"
-    dest: "{{ user_home }}/.xscreensaver"
-    state: link
-
 - name: Link the binary folder
   file:
     src: "{{ role_path }}/files/binaries"
@@ -51,3 +45,33 @@
     src: "{{ role_path }}/files/stalonetrayrc"
     dest: "{{ user_home }}/.stalonetrayrc"
     state: link
+
+
+# Setup xscreensaver
+
+- name: Link the xscreensaver
+  file:
+    src: "{{ role_path }}/files/xscreensaver"
+    dest: "{{ user_home }}/.xscreensaver"
+    state: link
+
+- name: Delete gnome-screensaver
+  apt:
+    name: gnome-screensaver
+    state: absent
+  become: true
+  become_method: sudo
+
+- name: Link the binary
+  file:
+    src: /usr/bin/xscreensaver-command
+    dest: /usr/bin/gnome-screensaver-command
+    state: link
+  become: true
+  become_method: sudo
+
+- name: Create the directory ~/.config/xscreensaver/
+  file:
+    path: "{{ user_home }}/.config/xscreensaver"
+    recursive: yes
+    state: directory
