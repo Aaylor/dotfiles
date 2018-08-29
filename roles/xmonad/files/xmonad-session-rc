@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Start xscreensaver
-sleep 10 && xscreensaver -no-splash &
+sleep 3 && xscreensaver -no-splash &
 
 
 
@@ -20,4 +20,6 @@ setup_tray() {
     ( type nm-applet > /dev/null && nm-applet --sm-disable ) &
 }
 
-sleep 5 && setup_tray
+# Comment: the stalone tray is disable for now, since it is not necessary as
+# is for the moment.
+# setup_tray
