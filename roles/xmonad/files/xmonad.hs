@@ -131,6 +131,7 @@ myKeys conf @ (XConfig { XMonad.modMask = modMask }) =
 
    -- Screensaver
  , ((modMask .|. shiftMask, xK_l), spawn "xscreensaver-command -lock")
+ , ((modMask .|. shiftMask .|. controlMask, xK_l), spawn "gksudo systemctl hibernate")
 
    -- Sound
  , ((modMask .|. controlMask, xK_Up), spawn "amixer sset Master 5%+")

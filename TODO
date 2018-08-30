@@ -1,0 +1,11 @@
+- FIX:  ~ hibernate: the hibernate command is not a valid state for now: it does not work
+	  every time (and there is no explicit reason why...)
+- XSCREENSAVER: ~ add more images
+                ~ add to documentation how to add images to xscreensaver
+- TMUX: ~ add tmuxp
+        ~ add startup configuration
+- ZSH:  ~ add configuration
+        ~ add functions
+        ~ add aliases  
+- AWS:  ~ add a way to easy install private keys
+

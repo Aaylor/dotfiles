@@ -6,6 +6,7 @@
   become_method: sudo
   vars:
     apt_packages:
+      - gksu
       - gmrun
       - shellcheck
       - stalonetray             # For: nm-applet
