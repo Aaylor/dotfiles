@@ -12,4 +12,5 @@
       - suckless-tools          # For: dmenu
       - xcompmgr
       - xscreensaver
+      - xscreensaver-gl
 
