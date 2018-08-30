@@ -10,5 +10,6 @@
       - shellcheck
       - stalonetray             # For: nm-applet
       - suckless-tools          # For: dmenu
+      - xcompmgr
       - xscreensaver
 

@@ -1,31 +1,31 @@
 #!/usr/bin/env bash
 
+# Wait a little
+sleep 2
+
+
 # Setup background
 feh --bg-fill \
     ~/.xmonad/resources/wallpaper-1.jpg \
     ~/.xmonad/resources/wallpaper-2.jpg \
     ~/.xmonad/resources/wallpaper-3.jpg &
 
+
 # Start xscreensaver
+killall gnome-screensaver &
 sleep 3 && xscreensaver -no-splash &
 
 
+# Start window compositor
+xcompmgr -n &
 
-###########
-# ICON TRAY
 
+# Start the system tray
 setup_tray() {
-
-    # Setup the tray
     stalonetray &
-
-    # Wait the tray to be ready
-    sleep 3
-
-    # Start nm-applet if it exists
+    sleep 2
     ( type nm-applet > /dev/null && nm-applet --sm-disable ) &
 }
-
 # Comment: the stalone tray is disable for now, since it is not necessary as
 # is for the moment.
 # setup_tray
