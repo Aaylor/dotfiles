@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# Setup background
+feh --bg-fill \
+    ~/.xmonad/resources/wallpaper-1.jpg \
+    ~/.xmonad/resources/wallpaper-2.jpg \
+    ~/.xmonad/resources/wallpaper-3.jpg &
+
 # Start xscreensaver
 sleep 3 && xscreensaver -no-splash &
 
