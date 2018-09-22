@@ -133,9 +133,9 @@ net_connect() {
     fi
 
     if nmcli --fields NAME connect | tail -n +2 | grep -q -w "$WIFI_NAME"; then
-        nmcli connection up "$WIFI_NAME"
+        nmcli --ask connection up "$WIFI_NAME"
     else
-        nmcli device wifi connect "$WIFI_NAME"
+        nmcli --ask device wifi connect "$WIFI_NAME"
     fi
 }
 
