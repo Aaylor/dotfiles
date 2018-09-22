@@ -1,0 +1,8 @@
+session_name: dev
+windows:
+  - window_name: dev
+    layout: tiled
+    shell_command_before:
+      - cd ~/
+    panes:
+      - cd git/tis/tis-analyzer

@@ -1,4 +1,6 @@
 
+# TMUX
+
 - name: Install tmux using apt-get
   apt:
     name: tmux
@@ -10,4 +12,24 @@
   file:
     src: "{{ role_path }}/files/tmux.conf"
     dest: "{{ user_home }}/.tmux.conf"
+    state: link
+
+
+# TMUXP
+
+- name: Install tmupx using pip
+  pip:
+    name: tmuxp
+    state: latest
+    extra_args: --user
+
+- name: Create the configuration folder .tmuxp
+  file:
+    path: "{{ user_home }}/.tmuxp"
+    state: directory
+
+- name: Link the work-session tmuxp configuration
+  file:
+    src: "{{ role_path }}/files/work-session.yml"
+    dest: "{{ user_home }}/.tmuxp/work-session.yml"
     state: link
