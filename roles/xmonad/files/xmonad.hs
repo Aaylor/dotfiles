@@ -2,6 +2,7 @@
 {-# LANGUAGE TypeFamilies #-}
 
 import XMonad
+import XMonad.Actions.SpawnOn
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -10,6 +11,9 @@ import XMonad.Layout.Spacing
 import XMonad.Util.Run
 import XMonad.Util.WorkspaceCompare
 
+import Control.Monad
+
+import System.Environment
 import System.Exit
 import System.IO
 
@@ -86,6 +90,7 @@ myTerminal = "konsole"
 
 myManageHook =
   manageDocks <+>
+  manageSpawn <+>
   manageHook XMonad.def <+>
   composeOne [ isDialog -?> doFloat
              , transience]
@@ -161,6 +166,15 @@ myKeys conf @ (XConfig { XMonad.modMask = modMask }) =
 
 
 ------------------------------------------------------------------------
+-- Startup:
+
+myStartupHook :: Bool -> X ()
+myStartupHook initial = do
+  when initial $ do
+    spawnOn "W3" "konsole -e 'tmuxp load work-session'"
+
+
+------------------------------------------------------------------------
 -- Main:
 
 myPP =
@@ -173,7 +187,7 @@ myPP =
   , ppVisible = wrap "(" ")"
   , ppWsSep = " | " }
 
-myConfig =
+myConfig args =
   XMonad.def
   { XMonad.borderWidth = myBorderWidth
   , XMonad.workspaces = myWorkspaces
@@ -185,13 +199,15 @@ myConfig =
     -- Hooks
   , XMonad.layoutHook = layout
   , XMonad.manageHook = myManageHook
+  , XMonad.startupHook = myStartupHook (null args)
   }
 
 
 main = do
+  args <- getArgs
   n <- countScreens
   xmprocs <- mapM (\i -> spawnPipe ("xmobar -x" ++ show i)) [0 .. n - 1]
-  xmonad myConfig {
+  xmonad (myConfig args) {
     logHook = mapM_
               (\handle -> dynamicLogWithPP $ myPP { ppOutput = System.IO.hPutStrLn handle })
               xmprocs

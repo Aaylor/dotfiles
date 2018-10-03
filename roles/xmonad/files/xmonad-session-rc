@@ -20,6 +20,16 @@ sleep 3 && xscreensaver -no-splash &
 xcompmgr -n &
 
 
+# Setup the sound
+{
+    amixer sset Master unmute
+    amixer sset Master 40%
+    amixer sset Headphone unmute
+    amixer sset Headphone 50%
+}
+
+
+
 # Start the system tray
 setup_tray() {
     stalonetray &
