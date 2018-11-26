@@ -1,0 +1,37 @@
+
+
+# Install openjdk
+
+- name: Install OpenJDK
+  apt:
+    dpkg_options: 'force-overwrite'
+    name: "{{ openjdk_packages }}"
+  become: true
+  become_method: sudo
+  vars:
+    openjdk_packages:
+      - openjdk-8-jdk
+      - openjdk-8-jre
+      - openjdk-9-jdk-headless
+      - openjdk-9-jdk
+      - openjdk-9-jre
+
+- name: Install ANT
+  apt:
+    name: "ant"
+  become: true
+  become_method: sudo
+
+
+# Install Android tools
+
+# https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
+- name: Downloading the sdk-tools-linux (Android)
+  get_url:
+    url: "https://dl.google.com/android/repository/sdk-tools-linux-{{ sdk_tool_version }}.zip"
+    dest: /tmp/sdk-tools-linux.zip
+
+- name: Unarchive the sdk-tools-linux archive
+  unarchive:
+    src: /tmp/sdk-tools-linux.zip
+    dest: /tmp/

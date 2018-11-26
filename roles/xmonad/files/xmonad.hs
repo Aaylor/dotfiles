@@ -6,6 +6,7 @@ import XMonad.Actions.SpawnOn
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.SetWMName
 import XMonad.Layout.IndependentScreens
 import XMonad.Layout.Spacing
 import XMonad.Util.Run
@@ -170,6 +171,7 @@ myKeys conf @ (XConfig { XMonad.modMask = modMask }) =
 
 myStartupHook :: Bool -> X ()
 myStartupHook initial = do
+  setWMName "LG3D"
   when initial $ do
     spawnOn "W3" "konsole -e 'tmuxp load work-session'"
 
