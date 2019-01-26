@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+# The directory which contains information about the laptop screen, and files
+# to update the brightness value.
+BACKLIGHT_DIRECTORY=/sys/class/backlight/intel_backlight
+
+if [ ! -d "$BACKLIGHT_DIRECTORY" ]; then
+    echo "The directory '$BACKLIGHT_DIRECTORY' does not exist. Unable to " \
+         "modify the screen brightness."
+    exit 1
+fi
+
+# Minimal brightness value (set by experience).
+BRIGHTNESS_MIN=5
+
+# The maximum value the brightness can take.
+BRIGHTNESS_MAX=$(cat "$BACKLIGHT_DIRECTORY/max_brightness")
+
+# Translates brightness values into percentages.
+BRIGHTNESS_STEP=$(( $BRIGHTNESS_MAX / 100 ))
+
+
+
+function update_brightness() {
+    if [ -z "$1" ]; then
+        echo "update_brightness: invalid parameter."
+        exit 1
+    fi
+
+    brightness_p="$1"
+    if (( $brightness_p <= 0 )); then
+        brightness_p=$BRIGHTNESS_MIN
+    elif (( $brightness_p < 5 )); then
+        echo "update_brightness: the brightness should not be set with a " \
+             "value lower than $BRIGHTNESS_MIN. Set to min value.";
+        brightness_p=$BRIGHTNESS_MIN
+    elif (( $brightness_p > 100 )); then
+        brightness_p=100
+    fi
+
+    brightness=$(( $brightness_p * $BRIGHTNESS_STEP ))
+
+    echo "$brightness" | sudo tee "$BACKLIGHT_DIRECTORY/brightness"
+}
+
+function help() {
+    cat <<EOF
+screen-brightness <brightness>
+
+  ; The brightness parameter is a percentage bewteen $BRIGHTNESS_MIN and 100.
+    If the value is lower than $BRIGHTNESS_MIN, then the value become
+    $BRIGHTNESS_MIN. If the value is higher than 100, then the value become
+    100.
+EOF
+}
+
+
+##
+# Parse parameters
+
+if [ -z "$1" ]; then
+    help
+    exit 0
+fi
+
+case "$1" in
+    help|h|--help|-h)
+        help;
+        exit 0
+        ;;
+    *)
+        update_brightness "$1"
+        ;;
+esac
+

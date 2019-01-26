@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+# The directory which contains information about the keyboard brightness, and
+# files to update the brightness value.
+KEYBOARD_DIRECTORY=/sys/devices/platform/dell-laptop/leds/dell::kbd_backlight
+
+if [ ! -d "$KEYBOARD_DIRECTORY" ]; then
+    echo "The directory '$KEYBOARD_DIRECTORY' does not exist. You may not " \
+         "have a DELL laptop... ¯\_(ツ)_/¯" >&2
+    exit 1
+fi
+
+
+function update_brightness() {
+    if [ -z "$1" ]; then
+        echo "update_brightness: invalid parameter." >&2
+        exit 1
+    fi
+
+    case "$1" in
+        no)
+            BRIGHTNESS_VALUE=0
+            ;;
+        medium)
+            BRIGHTNESS_VALUE=1
+            ;;
+        strong)
+            BRIGHTNESS_VALUE=2
+            ;;
+        *)
+            echo "update_brightness: invalid parameter '$1'. It must be one " \
+                 "of: no, medium, strong." >&2;
+            exit 1
+            ;;
+    esac
+
+    echo "$BRIGHTNESS_VALUE" | sudo tee "$KEYBOARD_DIRECTORY/brightness"
+}
+
+function help() {
+    cat <<EOF
+keyboard-brightness <brightness>
+
+  ; The brightness parameter is one of:
+        - "no": deactivate the keyboard brightness
+        - "medium": set the keyboard light into a soft mode
+        - "strong": set the keyboard light with full light
+EOF
+}
+
+
+##
+# Parse parameters
+
+if [ -z "$1" ]; then
+    help
+    exit 0
+fi
+
+case "$1" in
+    help|h|--help|-h)
+        help;
+        exit 0
+        ;;
+    *)
+        update_brightness "$1"
+        ;;
+esac
+
+
