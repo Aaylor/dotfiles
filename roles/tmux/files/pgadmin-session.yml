@@ -1,0 +1,8 @@
+session_name: pgadmin
+windows:
+  - window_name: pgadmin
+    layout: tiled
+    shell_command_before:
+      - cd ~/
+    panes:
+      - pgadmin

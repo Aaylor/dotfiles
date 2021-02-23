@@ -49,6 +49,11 @@
       tags:
         - java
 
+    - role: javascript
+      tags:
+        - javascript
+
+
     # Initialize tmux
     - role: tmux
       tags:

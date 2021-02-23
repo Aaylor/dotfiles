@@ -1,0 +1,37 @@
+
+# Add Nodesource GPG key
+
+- name: Add Nodesource GPG key to apt
+  apt_key:
+    state: present
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+  become: true
+  become_method: sudo
+
+
+# Add Nodesource repository
+
+- name: Add Nodesource repository
+  apt_repository:
+    repo: 'deb https://deb.nodesource.com/node_10.x {{ ansible_distribution_release }} main'
+    state: present
+    update_cache: yes
+  become: true
+  become_method: sudo
+
+
+# Install nodeJS
+
+- name: Install nodejs
+  apt:
+    name: nodejs
+  become: true
+  become_method: sudo
+
+- name: Create npm global folder
+  file:
+    path: "{{ user_home }}/.npm-global"
+    state: directory
+
+- name: Update npm prefix
+  command: npm config set "{{ user_home }}/.npm-global"

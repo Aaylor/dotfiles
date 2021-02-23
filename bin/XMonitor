@@ -1,0 +1,135 @@
+#!/usr/bin/env bash
+
+###############################
+# CONFIGURATION PART
+
+# COMMON
+LAPTOP_MONITOR=eDP-1-1
+
+# HOME
+HOME_SCREEN_BENQ=DP-1-3
+
+# WORK
+# TODO
+
+# ALL KNOWN MONITORS
+ALL_MONITORS=(
+    "$LAPTOP_MONITOR"
+    "$HOME_SCREEN_BENQ"
+)
+
+###############################
+# HELP
+
+function help {
+    cat <<EOF
+XMonitor {alone|home|work}
+
+Configure the different monitors depending on the given configuration.
+TODO
+EOF
+}
+
+
+###############################
+# APPLY CONFIGURATION
+
+function _set_off_all_outputs {
+    for monitor in "${ALL_MONITORS[@]}"; do
+        xrandr --output "$monitor" --off
+    done
+}
+
+function _update_xmonad {
+    if type xmonad; then
+        xmonad --recompile
+        xmonad --restart
+    else
+        >&2 echo "The binary 'xmonad' is not in the PATH. Unable to update " \
+            "XMonad with the new monitor setup."
+    fi
+}
+
+# Apply the [alone] configuration.
+function alone {
+    # SET OFF ALL MONITORS BEFORE
+    _set_off_all_outputs
+
+    # SET RESOLUTION
+    xrandr --output "$LAPTOP_MONITOR" --mode 1920x1080 --rate 60
+
+    # SET PRIMARY MONITOR
+    xrandr --output "$LAPTOP_MONITOR" --primary
+
+    # UPDATE XMONAD
+    _update_xmonad
+}
+
+# Apply the [home] configuration.
+function home {
+    # SET OFF ALL MONITORS BEFORE
+    _set_off_all_outputs
+
+    # SET RESOLUTION
+    xrandr --output "$LAPTOP_MONITOR" --mode 1920x1080 --rate 60
+    xrandr --output "$HOME_SCREEN_BENQ" --mode 1920x1080 --rate 60
+
+    # SET ORDER
+    xrandr --output "$HOME_SCREEN_BENQ" --right-of "$LAPTOP_MONITOR"
+
+    # SET PRIMARY MONITOR
+    xrandr --output "$LAPTOP_MONITOR" --primary
+
+    # UPDATE XMONAD
+    _update_xmonad
+}
+
+function home_one_screen {
+    # SET OFF ALL MONITORS BEFORE
+    _set_off_all_outputs
+
+    # SET RESOLUTION
+    xrandr --output "$HOME_SCREEN_BENQ" --mode 1920x1080 --rate 60
+
+    # SET PRIMARY MONITOR
+    xrandr --output "$HOME_SCREEN_BENQ" --primary
+
+    # UPDATE XMONAD
+    _update_xmonad
+}
+
+# Apply the [work] configuration.
+function work {
+    >&2 echo "Not implemented yet."
+}
+
+
+
+###############################
+# EXECUTE
+
+if [ -z "${1:-}" ]; then
+    help
+    exit 1
+fi
+
+case "$1" in
+    alone)
+        alone
+        ;;
+    home)
+        home
+        ;;
+    home-alone)
+        home_one_screen
+        ;;
+    work)
+        work
+        ;;
+    *)
+        >&2 echo "Invalid mode '$1'."
+        >&2 echo
+        help
+        exit 1
+        ;;
+esac

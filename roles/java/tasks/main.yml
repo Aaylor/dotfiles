@@ -2,19 +2,19 @@
 
 # Install openjdk
 
-- name: Install OpenJDK
-  apt:
-    dpkg_options: 'force-overwrite'
-    name: "{{ openjdk_packages }}"
-  become: true
-  become_method: sudo
-  vars:
-    openjdk_packages:
-      - openjdk-8-jdk
-      - openjdk-8-jre
-      - openjdk-9-jdk-headless
-      - openjdk-9-jdk
-      - openjdk-9-jre
+# - name: Install OpenJDK
+#   apt:
+#     dpkg_options: 'force-overwrite'
+#     name: "{{ openjdk_packages }}"
+#   become: true
+#   become_method: sudo
+#   vars:
+#     openjdk_packages:
+#       - openjdk-8-jdk
+#       - openjdk-8-jre
+#       - openjdk-9-jdk-headless
+#       - openjdk-9-jdk
+#       - openjdk-9-jre
 
 - name: Install ANT
   apt:
@@ -23,15 +23,31 @@
   become_method: sudo
 
 
-# Install Android tools
+# Install sbt
 
-# https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
-- name: Downloading the sdk-tools-linux (Android)
-  get_url:
-    url: "https://dl.google.com/android/repository/sdk-tools-linux-{{ sdk_tool_version }}.zip"
-    dest: /tmp/sdk-tools-linux.zip
+- name: Add sbt key
+  apt_key:
+    state: present
+    keyserver: hkp://keyserver.ubuntu.com:80
+    id: 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+  become: true
+  become_method: sudo
 
-- name: Unarchive the sdk-tools-linux archive
-  unarchive:
-    src: /tmp/sdk-tools-linux.zip
-    dest: /tmp/
+- name: Add sbt repository
+  apt_repository:
+    repo: deb https://dl.bintray.com/sbt/debian /
+    state: present
+    update_cache: yes
+  become: true
+  become_method: sudo
+
+- name: Install sbt
+  apt:
+    name: sbt
+    allow_unauthenticated: yes
+  become: true
+  become_method: sudo
+
+
+# Install sbt
+

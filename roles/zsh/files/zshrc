@@ -88,3 +88,6 @@ for zsh_script in $(find "$DOTFILES" -name '*.zsh'); do
     source "$zsh_script"
 done
 export PATH="$DOTFILES/bin:$PATH"
+
+# Add npm-global binaries
+export PATH="$PATH:$HOME/.npm-global/bin"

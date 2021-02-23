@@ -38,7 +38,6 @@ Config
       , Run DiskU [ ("/", "<icon=harddisk-icon_24.xpm/> <usedp>%; <free>") ]
                   []
                   20
-      , Run DynNetwork [ "-t", "D:<rxvbar> U:<txvbar>" ] 10
       , Run Memory [ "-t", "<icon=memory-icon_24.xpm/> <usedratio>%; <available>M"] 10
       , Run MultiCpu [ "-t", "<icon=gnome_cpu_24.xpm/> <autovbar>"
                      , "-p", "3"
@@ -52,6 +51,6 @@ Config
       ]
   , sepChar = "%"
   , alignSep = "}{"
-  , template = " %StdinReader%  }{  %customnet% | %multicpu% | %coretemp% | %customvolume% | %memory% | %disku% | %dynnetwork% | %battery% | %date% "
+  , template = " %StdinReader%  }{  %customnet% | %multicpu% | %coretemp% | %customvolume% | %memory% | %disku% | %battery% | %date% "
   }
   

@@ -33,3 +33,9 @@
     src: "{{ role_path }}/files/work-session.yml"
     dest: "{{ user_home }}/.tmuxp/work-session.yml"
     state: link
+
+- name: Link the pgadmin-session tmuxp configuration
+  file:
+    src: "{{ role_path }}/files/pgadmin-session.yml"
+    dest: "{{ user_home }}/.tmuxp/pgadmin-session.yml"
+    state: link
